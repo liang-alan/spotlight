@@ -8,8 +8,8 @@ export default function Spotlight() {
     const [user, setUser] = useState({});
 
     return <div>
-        <NavBar />
-        <Context.Provider value={{user,setUser}}>
+        <Context.Provider value={{ user, setUser }}>
+            <NavBar />
             <Outlet />
         </Context.Provider>
     </div>;
