@@ -1,3 +1,6 @@
+#API-Credential
+./src/navigation/firebase-config.js
+
 # Logs
 logs
 *.log
