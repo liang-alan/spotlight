@@ -2,3 +2,60 @@
     height: 50vh;
 
 }
+
+.upload-media{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 25vh;
+
+}
+
+.image-preview{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 100%;
+    max-height : 100%;
+}
+
+.audio-preview{
+    max-width: 100%;
+    max-height : 100%;
+    
+}
+
+.media-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 1em;
+}
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+}
+
+.loading-spinner {
+    border: 10px solid rgba(0, 0, 0, 0.1);
+    border-top: 10px solid #3498db;
+    border-radius: 50%;
+    width: 100px;  /* Adjust as needed */
+    height: 100px; /* Adjust as needed */
+}
+
+.profile-picture {
+    width: 175px;
+    height: 175px;
+    border-radius: 50%;
+    border : 2px solid #3498db;
+    object-fit: cover;
+}
+
+.navbar-spacing {
+    margin-left : 0.5em;
+    margin-right : 0.5em;
+}

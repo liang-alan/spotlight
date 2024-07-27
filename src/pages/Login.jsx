@@ -1,7 +1,10 @@
 import { Alert, Button, Form } from 'react-bootstrap';
 import { auth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword } from '../navigation/firebase-config';
 import { useContext, useState, useRef } from 'react';
-import {Row , Col, Container} from 'react-bootstrap';
+import { Row, Col, Container } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+
+
 import Context from '../navigation/context';
 import '../assets/styles.css';
 
@@ -17,6 +20,8 @@ export default function Login() {
     const [animateBlockadeLeft, setAnimateBlockadeLeft] = useState({ opacity: 1, x: 0 });
     const [animateBlockadeRight, setAnimateBlockadeRight] = useState({ opacity: 1, x: 0 });
     const animationComplete = useRef(false);
+    const navigate = useNavigate();
+
 
 
     const loginWithGoogle = async () => {
@@ -26,6 +31,8 @@ export default function Login() {
             console.log("User signed in with Google: ");
             console.log(result.user);
             setUser(result.user);
+            navigate(`/profile/${user.uid}`); 
+
         } catch (error) {
             console.error("An Error has occured while signing in with Google: ", error);
         }
@@ -41,8 +48,12 @@ export default function Login() {
             const result = await createUserWithEmailAndPassword(auth, credentials.email, credentials.password);
             setUser(result.user);
             console.log("User signed up: ", result.user);
+            alert("Successfully signed up!");
+            navigate(`/profile/${user.uid}`); 
+
         } catch (error) {
             console.error("Error signing up: ", error.message);
+            alert("Error signing up: ", error.message);
         }
     }
     const loginWithEmail = async (e) => {
@@ -51,9 +62,12 @@ export default function Login() {
             const result = await signInWithEmailAndPassword(auth, credentials.email, credentials.password);
             setUser(result.user);
             console.log("User signed in: ", result.user);
+            alert("Successfully signed in!");
+            navigate(`/profile/${user.uid}`); 
 
         } catch (error) {
             console.error("Error signing in: ", error.message);
+            alert("Error signing in: ", error.message);
         }
     }
 

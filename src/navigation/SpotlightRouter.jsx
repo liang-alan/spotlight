@@ -11,6 +11,7 @@ import Login from '../pages/Login';
 import Profile from '../pages/Profile';
 import Logout from '../pages/Logout';
 import EditProfile from '../pages/EditProfile';
+import FourOhFour from '../pages/404';
 
 import Context from '../navigation/context';
 
@@ -29,7 +30,7 @@ export default function SpotlightRouter() {
                     <Route path="edit-profile" element={<EditProfile />} />
                     <Route path="login" element={<Login />} />
                     <Route path="logout" element={<Logout />} />
-                    <Route path="*" element={<h1>Hmmm.. you might be lost? Go back to the home page!</h1>} />
+                    <Route path="*" element={<FourOhFour/>} />
                 </Route>
             </Routes>
         </BrowserRouter>
