@@ -5,7 +5,7 @@ export default function LoginBlockade(props) {
     return <motion.div
         initial={{ opacity: 1, x: 0 }}       // Initial state: fully opaque, at x position 0
         animate={props.animate}    // Animate to: fully transparent, moved left by 100px
-        transition={{ duration: 0.5 }}         // Animation duration: 2 seconds
+        transition={{ duration: 0.4 }}         // Animation duration: 2 seconds
         onClick={props.onClick}
         style={{
             width: '100%',

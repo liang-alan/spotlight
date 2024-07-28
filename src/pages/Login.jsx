@@ -7,9 +7,10 @@ import { useNavigate } from 'react-router-dom';
 
 import Context from '../navigation/context';
 import '../assets/styles.css';
+import '../App.css';
 
 import LoginBlockade from '../assets/LoginBlockade';
-import {motion} from 'framer-motion';
+import { motion, useAnimation } from 'framer-motion';
 
 import { FaGoogle } from "react-icons/fa";
 
@@ -73,14 +74,14 @@ export default function Login() {
 
     const handleSwitchRight = () => {
         if (animationComplete.current) {
-            setAnimateBlockadeRight({ opacity: 0.5, x: '100%' });
+            setAnimateBlockadeRight({ opacity: 0, x: '100%' });
             animationComplete.current = false; // Reset the animation state
         }
     }
 
     const handleSwitchLeft = () => {
         if (animationComplete.current) {
-            setAnimateBlockadeLeft({ opacity: 0.5, x: '-100%' });
+            setAnimateBlockadeLeft({ opacity: 0, x: '-100%' });
             animationComplete.current = false; // Reset the animation state
         }
     }
@@ -95,7 +96,7 @@ export default function Login() {
         }
 
     }
-    return <div>
+    return <div className="background-container">
     <h1>Login</h1>
      <Container className="d-flex justify-content-center my-4">
       <Row>
@@ -103,7 +104,15 @@ export default function Login() {
           {logIn ? (
             <LoginBlockade text={"Log In"} animate={animateBlockadeRight} onClick={handleSwitchRight} handleAnimationComplete={handleAnimationComplete} />
           ) : (
-            <div className="">
+                <motion.div className=""
+                  initial={{ opacity: 0 }}
+                  animate={{
+                    opacity: 1,
+                  }}
+                  transition={{
+                    duration: 0.5,
+                  }}
+                >
               <h2>Log In with Email</h2>
               <Form onSubmit={loginWithEmail}>
                 <Form.Group controlId="formLoginEmail" className="mb-3">
@@ -130,7 +139,7 @@ export default function Login() {
                   Login
                 </Button>
               </Form>
-            </div>
+            </motion.div>
           )}
         </Col>
 
@@ -138,7 +147,15 @@ export default function Login() {
           {!logIn ? (
                         <LoginBlockade text={"Sign Up"} animate={animateBlockadeLeft} onClick={handleSwitchLeft} handleAnimationComplete={handleAnimationComplete} />
           ) : (
-            <div className="">
+                <motion.div className=""
+                  initial={{opacity: 0}}
+                  animate={{
+                    opacity: 1,
+                  }}
+                  transition={{
+                    duration: 0.5,
+                  }}
+                >
               <h2>Sign Up with Email</h2>
               <Form onSubmit={signUpWithEmail}>
                 <Form.Group controlId="formSignInEmail" className="mb-3">
@@ -175,7 +192,7 @@ export default function Login() {
                   Sign Up
                 </Button>
               </Form>
-            </div>
+            </motion.div>
           )}
         </Col>
       </Row>

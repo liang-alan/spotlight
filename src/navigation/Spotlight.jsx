@@ -5,6 +5,7 @@ import Context from './context';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import Login from '../pages/Login';
 import LoadingIcon from '../assets/LoadingIcon';
+import '../App.css';
 
 export default function Spotlight() {
     const [user, setUser] = useState(null);
@@ -32,8 +33,10 @@ export default function Spotlight() {
         <Context.Provider value={{ user, setUser }}>
             {user ? (
                 <div>
-                    <NavBar/>
-                    <Outlet />
+                    <NavBar />
+                    <div className="main-app-container">
+                        <Outlet />
+                    </div>
                 </div>
             ) : (
                 <Login />

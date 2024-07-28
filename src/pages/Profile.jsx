@@ -1,35 +1,162 @@
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { db } from '../navigation/firebase-config';
+import { Row, Col, Carousel, Button } from 'react-bootstrap';
+import {motion } from 'framer-motion';
+ 
+
 import LoadingIcon from '../assets/LoadingIcon';
+import Vinyl from '../assets/Vinyl';
+import { FaMapPin, FaSpotify, FaInstagram, FaFacebook, FaYoutube } from "react-icons/fa";
+import '../assets/styles.css';
 
 export default function Profile() {
     const { userId } = useParams();
     const [data, setData] = useState(null);
+    const [isImageLoaded, setIsImageLoaded] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [firstAnimationComplete, setFirstAnimationComplete] = useState(false);
+
     const navigate = useNavigate();
+    
 
     useEffect(() => {
         console.log(userId);
     }, [userId]);
 
-    const [profilePictureUrl, setProfilePictureUrl] = useState(defaultPFP);
 
-    useEffect(() => { //search yser
-        const fetchProfilePicture = async () => {
+
+    useEffect(() => { //search user
+        const fetchData = async () => {
             const docRef = doc(db, "users", userId);
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
                 setData(docSnap.data());
 
+                //preload pfp
+                const img = new Image();
+                img.src = docSnap.data().profilePicture;
+                img.onload = () => setIsImageLoaded(true);
+
+                console.log(docSnap.data());
+
             } else {
                 navigate('/404');
             }
+            setIsLoading(false);
         };
+        fetchData();
         
     }, []);
 
+    if (isLoading || !isImageLoaded) {
+        return <LoadingIcon />;
+    }
+
+    const handleChatRequest = () => {
+        console.log('Chat request');
+    };
+    const socialArray = data.socials ? Object.entries(data.socials) : [];
+    const staggerDelay = 0.5; // for vinyl
+
     return <div>
-        <h1>Profile</h1>
-        <h3>User ID: {userId}</h3>
+        <h1 className="mb-5">{data.displayName}</h1>
+        <motion.div
+            initial={{ opacity: 0, y: 200 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 1 , ease: 'easeOut' }}
+            onAnimationComplete={() => setFirstAnimationComplete(true)}
+
+        >
+            <Row className="profile-row">
+                <Col xs={12} lg={3} style={{ position: 'relative' }}>
+                    <img src={data.profilePicture} alt="Profile Picture" />
+                </Col>
+                
+                <Col xs={12} lg={9} className="text-start">
+                    <Row>
+                        {data.tracks.map((track, index) => (
+                            <Col xs={4} key={index} style={{ position: 'relative' }}>
+                                <motion.div
+                                    initial={{ opacity: 0, x: -250, scale:0.75 }} // Initial state: hidden and shifted left
+                                    animate={{
+                                        opacity: firstAnimationComplete ? 1 : 0,
+                                        x: firstAnimationComplete ? 0 : -250,
+                                        scale: firstAnimationComplete ? 1 : 0.5
+                                    }} // Final state: fully visible and in place
+                                    transition={{
+                                        delay: index * staggerDelay , // Stagger animation
+                                        duration: 0.6, // Animation duration
+                                        ease: 'easeOut'
+                                    }}
+                                >
+                                    <Vinyl track={track} name={data.trackNames[index]} />
+                                </motion.div>
+                            </Col>
+                        ))}
+                    </Row>
+                </Col>
+            </Row>
+            <Row className="profile-row">
+                <Col xs={12} lg={3} className="profile-column-spacing">{
+                    data.location ? <p> <FaMapPin /> {data.location}</p> : null
+                }
+                    {
+                        data.tags ? <p>Tags: {data.tags.join(', ')}</p> : null
+                    }
+                    <Row>
+                        {
+                            socialArray.map(([key, value]) => {
+                                return <Col key={key} xs={6} className="text-start">
+                                    <a href={value} target="_blank" rel="noreferrer">{
+                                        key === 'spotify' ? <FaSpotify className="profile-social-icon"/> :
+                                            key === 'instagram' ? <FaInstagram className="profile-social-icon" /> :
+                                                key === 'facebook' ? <FaFacebook className="profile-social-icon" /> :
+                                                    key === 'youtube' ? <FaYoutube className = "profile-social-icon"/> : null
+                                    }</a>
+                                </Col>;
+                            })
+                        }
+                    </Row>
+                    <Row>
+                        <Button variant="primary" onClick={handleChatRequest}>Chat</Button>
+                    </Row>
+                </Col>
+                <Col xs={12} lg={9} className="text-start profile-column-spacing">
+                    <h2>About {`${data.displayName}`}</h2>
+                    <p>{data.bio}</p>
+                </Col>
+            </Row>
+            <Row className="profile-row">
+                <Carousel className="profile-carousel">
+                    {data.photos.map((photo, index) => (
+                        <Carousel.Item key={index} className="profile-carousel-image">
+                            <img
+                                className="d-block w-100"
+                                src={photo}
+                                alt={`Slide ${index}`}
+                            />
+                        </Carousel.Item>
+                    ))}
+                </Carousel>
+                
+            </Row>
+            <Row className="profile-row">
+                <h2>Highlighted Video</h2>
+                <iframe
+                    src={"https://www.youtube.com/embed/" + data.video.split('watch?v=')[1]}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    title="YouTube video player"
+                    className="profile-video"
+                ></iframe>
+
+            </Row>
+
+        </motion.div>
     </div>;
 }

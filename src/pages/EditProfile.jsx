@@ -1,8 +1,8 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { getAuth, updateProfile } from "firebase/auth";
-import { collection, doc, getDoc, setDoc } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { storage, ref, uploadBytes, getDownloadURL } from '../navigation/firebase-config'; // Adjust path as needed
 
 
@@ -133,6 +133,17 @@ export default function EditProfile() {
         }));
     };
 
+    const handleChangeSocials = (e) => {
+        const { name, value } = e.target;
+        setData(prevData => ({
+            ...prevData,
+            socials: {
+                ...prevData.socials,
+                [name]: value
+            }
+        }));
+    };
+
     const handleFileSelect = (file, index) => {
         setSelectedFiles(prevFiles => {
             const updatedFiles = [...prevFiles];
@@ -237,7 +248,7 @@ export default function EditProfile() {
                                 </Col>
                             </Form.Group>
                             <Form.Group as={Row} controlId="video">
-                                <Form.Label column sm={2}>Featured Video</Form.Label>
+                                <Form.Label column sm={2}>Video Link</Form.Label>
                                 <Col sm={10}>
                                     <Form.Control
                                         type="url"
@@ -247,6 +258,42 @@ export default function EditProfile() {
                                         placeholder={"e.g. https://www.youtube.com/watch?v=abcdefg"}
                                     />
 
+                                </Col>
+                            </Form.Group>
+                            <Form.Group as={Row} controlId="socials">
+                                <Form.Label column sm={2}>Socials</Form.Label>
+                                <Col sm={10}>
+                                    <Form.Control
+                                        type="text"
+                                        name="instagram"
+                                        value={data.socials.instagram}
+                                        onChange={handleChangeSocials}
+                                        placeholder={"Instagram"}
+                                    />
+                                    <Form.Control
+                                        type="text"
+                                        name="youtube"
+                                        value={data.socials.youtube}
+                                        onChange={handleChangeSocials}
+                                        placeholder={"Youtube"}
+
+                                    />
+                                    <Form.Control
+                                        type="text"
+                                        name="facebook"
+                                        value={data.socials.facebook}
+                                        onChange={handleChangeSocials}
+                                        placeholder={"Facebook"}
+
+                                    />
+                                    <Form.Control
+                                        type="text"
+                                        name="spotify"
+                                        value={data.socials.spotify}
+                                        onChange={handleChangeSocials}
+                                        placeholder={"Spotify"}
+
+                                    />
                                 </Col>
                             </Form.Group>
                         </Col>
@@ -281,6 +328,19 @@ export default function EditProfile() {
                     <Row>
                         {Array.from({ length: uploadAudioCount }, (_, index) => (
                             <Col xs={6} lg={4} key={index}>
+                                <Form.Label>Track {index + 1} Name</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    name={`track${index}`}
+                                    value={data.trackNames[index]}
+                                    onChange={(e) => {
+                                        const updatedTrackNames = [...data.trackNames];
+                                        updatedTrackNames[index] = e.target.value;
+                                        setData(prevData => ({ ...prevData, trackNames: updatedTrackNames }));
+                                    }}
+                                    placeholder={"Song Name"}
+                                />
+                                
                                 <UploadMedia
                                     type="audio"
                                     onFileSelect={handleAudioFileSelect}
