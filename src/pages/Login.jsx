@@ -32,7 +32,7 @@ export default function Login() {
             console.log("User signed in with Google: ");
             console.log(result.user);
             setUser(result.user);
-            navigate(`/profile/${user.uid}`); 
+            navigate(`/profile/${result.user.uid}`); 
 
         } catch (error) {
             console.error("An Error has occured while signing in with Google: ", error);

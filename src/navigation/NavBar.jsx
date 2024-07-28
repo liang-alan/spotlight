@@ -40,7 +40,7 @@ export default function NavBar() {
                     <Nav.Link as={Link} to="/chats" className="navbar-spacing">Messages</Nav.Link>
                     <Nav.Link as={Link} to="/find-artists" className="navbar-spacing">Find Artists</Nav.Link>
                     <Nav.Link as={Link} to="/find-gigs" className="navbar-spacing">Find Events</Nav.Link>
-                    <Nav.Link as={Link} to="/login" className="navbar-spacing">Login</Nav.Link>
+                    {/* <Nav.Link as={Link} to="/login" className="navbar-spacing">Login</Nav.Link> */}
                     <NavDropdown title={<img
                             src={profilePictureUrl}
                             alt="Profile"

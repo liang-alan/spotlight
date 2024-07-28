@@ -26,11 +26,15 @@
 }
 
 .media-container{
-    display: flex;
+    display: inline-block;
     justify-content: center;
     align-items: center;
     padding-bottom: 1em;
+    position: relative;
+    height : 20%;
+    min-height : 20%;
 }
+
 
 .loading-container {
     display: flex;

@@ -91,10 +91,15 @@ export default function EditProfile() {
                         await uploadBytes(storageRef, file);
                         const downloadURL = await getDownloadURL(storageRef);
                         updatedData.photos[index] = downloadURL;
+                    } else if (file === -1) {
+                        updatedData.photos[index] = null;
                     } else {
                         continue;
                     }
                 }
+
+                // remove all null
+                updatedData.photos = updatedData.photos.filter(photo => photo !== null);
 
                 for (let index = 0; index < selectedAudioFiles.length; index++) {
                     const file = selectedAudioFiles[index];
@@ -105,10 +110,14 @@ export default function EditProfile() {
                         await uploadBytes(storageRef, file);
                         const downloadURL = await getDownloadURL(storageRef);
                         updatedData.tracks[index] = downloadURL;
+                    } else if (file === -1) {
+                        updatedData.tracks[index] = null;
                     } else {
                         continue;
                     }
                 }
+
+                updatedData.tracks = updatedData.tracks.filter(track => track !== null);
 
                 console.log("Updated data: ", updatedData);
                 const userDocRef = doc(db, "users", user.uid);
