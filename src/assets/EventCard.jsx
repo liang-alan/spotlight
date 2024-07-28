@@ -33,9 +33,6 @@ export default function EventCard(props) {
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
                 setData(docSnap.data());
-
-                
-
             } 
             setIsLoading(false);
         };

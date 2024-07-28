@@ -22,6 +22,7 @@ export default function EditProfile() {
         id : "",
         bio: "",
         tracks: [],
+        trackNames:[],
         achievements: [],
         photos: [],
         location: "",
@@ -58,6 +59,7 @@ export default function EditProfile() {
                     setSelectedFiles(docSnap.data().photos);
                     setProfilePicture(docSnap.data().profilePicture);
                     console.log("Document data:", docSnap.data());
+                    
                 } else {
                     console.log("No such document!");
                 }

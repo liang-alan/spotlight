@@ -1,16 +1,18 @@
 import { auth, signOut } from "../navigation/firebase-config";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function Logout() {
     const navigate = useNavigate();
+    const [logoutSent , setLogoutSent] = useState(false);
 
 
     useEffect(() => {
         const handleSignOut = async () => {
             try {
                 await signOut(auth);
-                alert("You have been signed out.");
+                if (logoutSent) return;
+                setLogoutSent(true);
                 navigate("/login");
             } catch (error) {
                 console.error("An error has occured while signing out: ", error);

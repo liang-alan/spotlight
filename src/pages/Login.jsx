@@ -31,8 +31,18 @@ export default function Login() {
             const result = await signInWithPopup(auth, provider);
             console.log("User signed in with Google: ");
             console.log(result.user);
-            setUser(result.user);
+          setUser(result.user);
+          
+          // Check user's creation time
+          const creationTime = user.metadata.creationTime;
+          const lastSignInTime = user.metadata.lastSignInTime;
+
+          if (new Date(creationTime).toDateString() === new Date(lastSignInTime).toDateString()) {
+            navigate(`/edit-profile`);
+          } else {
             navigate(`/profile/${result.user.uid}`); 
+          }
+            
 
         } catch (error) {
             console.error("An Error has occured while signing in with Google: ", error);
@@ -50,7 +60,7 @@ export default function Login() {
             setUser(result.user);
             console.log("User signed up: ", result.user);
             alert("Successfully signed up!");
-            navigate(`/profile/${user.uid}`); 
+            navigate(`/edit-profile`); 
 
         } catch (error) {
             console.error("Error signing up: ", error.message);
@@ -64,7 +74,7 @@ export default function Login() {
             setUser(result.user);
             console.log("User signed in: ", result.user);
             alert("Successfully signed in!");
-            navigate(`/profile/${user.uid}`); 
+            navigate(`/profile/${result.user.uid}`); 
 
         } catch (error) {
             console.error("Error signing in: ", error.message);
@@ -96,121 +106,125 @@ export default function Login() {
         }
 
     }
-    return <div className="background-container">
-    <h1>Login</h1>
-     <Container className="d-flex justify-content-center my-4">
-      <Row>
-        <Col xs={12} md={6} className="d-flex align-items-center login-column position-relative">
-          {logIn ? (
-            <LoginBlockade text={"Log In"} animate={animateBlockadeRight} onClick={handleSwitchRight} handleAnimationComplete={handleAnimationComplete} />
-          ) : (
-                <motion.div className=""
-                  initial={{ opacity: 0 }}
-                  animate={{
-                    opacity: 1,
-                  }}
-                  transition={{
-                    duration: 0.5,
-                  }}
-                >
-              <h2>Log In with Email</h2>
-              <Form onSubmit={loginWithEmail}>
-                <Form.Group controlId="formLoginEmail" className="mb-3">
-                  <Form.Label>Email address</Form.Label>
-                  <Form.Control
-                    type="email"
-                    placeholder="Enter email"
-                    value={credentials.email}
-                    onChange={(e) => setCredentials({ ...credentials, email: e.target.value })}
-                  />
-                </Form.Group>
+  return <div className="background-container">
+    <div className="background-content">
+      <h1 className="text-center my-4">Spotlight</h1>
+      <Container className="d-flex justify-content-center my-4">
+        <Row>
+          <Col xs={12} md={6} className="d-flex align-items-center login-column position-relative">
+            {logIn ? (
+              <LoginBlockade text={"Log In"} animate={animateBlockadeRight} onClick={handleSwitchRight} handleAnimationComplete={handleAnimationComplete} />
+            ) : (
+              <motion.div className=""
+                initial={{ opacity: 0 }}
+                animate={{
+                  opacity: 1,
+                }}
+                transition={{
+                  duration: 0.5,
+                }}
+              >
+                <h2>Log In with Email</h2>
+                <Form onSubmit={loginWithEmail}>
+                  <Form.Group controlId="formLoginEmail" className="mb-3">
+                    <Form.Label>Email address</Form.Label>
+                    <Form.Control
+                      type="email"
+                      placeholder="Enter email"
+                      value={credentials.email}
+                      onChange={(e) => setCredentials({ ...credentials, email: e.target.value })}
+                    />
+                  </Form.Group>
 
-                <Form.Group controlId="formLoginPassword" className="mb-3">
-                  <Form.Label>Password</Form.Label>
-                  <Form.Control
-                    type="password"
-                    placeholder="Password"
-                    value={credentials.password}
-                    onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
-                  />
-                </Form.Group>
+                  <Form.Group controlId="formLoginPassword" className="mb-3">
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control
+                      type="password"
+                      placeholder="Password"
+                      value={credentials.password}
+                      onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+                    />
+                  </Form.Group>
 
-                <Button variant="primary" type="submit" className="mb-1">
-                  Login
-                </Button>
-              </Form>
-            </motion.div>
-          )}
-        </Col>
+                  <Button variant="primary" type="submit" className="mb-1">
+                    Login
+                  </Button>
+                </Form>
+              </motion.div>
+            )}
+          </Col>
 
-                <Col xs={12} md={6} className="d-flex align-items-center login-column position-relative">
-          {!logIn ? (
-                        <LoginBlockade text={"Sign Up"} animate={animateBlockadeLeft} onClick={handleSwitchLeft} handleAnimationComplete={handleAnimationComplete} />
-          ) : (
-                <motion.div className=""
-                  initial={{opacity: 0}}
-                  animate={{
-                    opacity: 1,
-                  }}
-                  transition={{
-                    duration: 0.5,
-                  }}
-                >
-              <h2>Sign Up with Email</h2>
-              <Form onSubmit={signUpWithEmail}>
-                <Form.Group controlId="formSignInEmail" className="mb-3">
-                  <Form.Label>Email address</Form.Label>
-                  <Form.Control
-                    type="email"
-                    placeholder="Enter email"
-                    value={credentials.email}
-                    onChange={(e) => setCredentials({ ...credentials, email: e.target.value })}
-                  />
-                </Form.Group>
+          <Col xs={12} md={6} className="d-flex align-items-center login-column position-relative">
+            {!logIn ? (
+              <LoginBlockade text={"Sign Up"} animate={animateBlockadeLeft} onClick={handleSwitchLeft} handleAnimationComplete={handleAnimationComplete} />
+            ) : (
+              <motion.div className=""
+                initial={{ opacity: 0 }}
+                animate={{
+                  opacity: 1,
+                }}
+                transition={{
+                  duration: 0.5,
+                }}
+              >
+                <h2>Sign Up with Email</h2>
+                <Form onSubmit={signUpWithEmail}>
+                  <Form.Group controlId="formSignInEmail" className="mb-3">
+                    <Form.Label>Email address</Form.Label>
+                    <Form.Control
+                      type="email"
+                      placeholder="Enter email"
+                      value={credentials.email}
+                      onChange={(e) => setCredentials({ ...credentials, email: e.target.value })}
+                    />
+                  </Form.Group>
 
-                <Form.Group controlId="formSignInPassword" className="mb-3">
-                  <Form.Label>Password</Form.Label>
-                  <Form.Control
-                    type="password"
-                    placeholder="Password"
-                    value={credentials.password}
-                    onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
-                  />
-                </Form.Group>
+                  <Form.Group controlId="formSignInPassword" className="mb-3">
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control
+                      type="password"
+                      placeholder="Password"
+                      value={credentials.password}
+                      onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+                    />
+                  </Form.Group>
 
-                <Form.Group controlId="formSignInConfirmPassword" className="mb-3">
-                  <Form.Label>Confirm Password</Form.Label>
-                  <Form.Control
-                    type="password"
-                    placeholder="Confirm Password"
-                    value={credentials.confirmPassword}
-                    onChange={(e) => setCredentials({ ...credentials, confirmPassword: e.target.value })}
-                  />
-                </Form.Group>
+                  <Form.Group controlId="formSignInConfirmPassword" className="mb-3">
+                    <Form.Label>Confirm Password</Form.Label>
+                    <Form.Control
+                      type="password"
+                      placeholder="Confirm Password"
+                      value={credentials.confirmPassword}
+                      onChange={(e) => setCredentials({ ...credentials, confirmPassword: e.target.value })}
+                    />
+                  </Form.Group>
 
-                <Button variant="primary" type="submit" className="mb-1">
-                  Sign Up
-                </Button>
-              </Form>
-            </motion.div>
-          )}
-        </Col>
-      </Row>
-    </Container>
-        <Button
-            variant="primary"
-            size="lg"
-            onClick={loginWithGoogle}
-        >
-            <Container>
-                <Row>
-                    <Col className="d-flex align-items-center justify-content-between">
-                        <FaGoogle className="me-2" />
-                        Login with Google
-                    </Col>
-                </Row>
-            </Container>
-        </Button>
+                  <Button variant="primary" type="submit" className="mb-1">
+                    Sign Up
+                  </Button>
+                </Form>
+              </motion.div>
+            )}
+          </Col>
+        </Row>
+      </Container>
+      <Button
+        variant="primary"
+        size="lg"
+        onClick={loginWithGoogle}
+      >
+        <Container>
+          <Row>
+            <Col className="d-flex align-items-center justify-content-between">
+              <FaGoogle className="me-2" />
+              Login with Google
+            </Col>
+          </Row>
+        </Container>
+      </Button>
+    </div>
+      
+       
         
     </div>;
 }

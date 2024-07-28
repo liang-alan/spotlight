@@ -1,7 +1,8 @@
 .login-column {
-    height: 50vh;
-
+    height: 45vh;
+    border-radius: 1em;
 }
+
 
 .upload-media{
     display: flex;
@@ -69,7 +70,6 @@
     justify-content: center;
     align-items: center;
     padding-bottom: 1em;
-    margin-bottom: 2em;
 }
 
 .profile-column-spacing {
@@ -129,7 +129,7 @@
 .vinyl:hover {
     transition: transform 0.3s ease-in-out;
     transform: scale(1.25);
-    
+
 
 }
 
