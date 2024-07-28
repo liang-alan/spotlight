@@ -1,8 +1,12 @@
-import { Alert, Button, Form } from 'react-bootstrap';
+import { Alert, Form, Button, Container, Row, Col } from 'react-bootstrap';
 import { auth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword } from '../navigation/firebase-config';
 import { useContext, useState, useRef } from 'react';
-import { Row, Col, Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+
+import { doc, setDoc } from "firebase/firestore";
+
+import { db } from '../navigation/firebase-config';
+
 
 
 import Context from '../navigation/context';
@@ -21,26 +25,55 @@ export default function Login() {
     const [animateBlockadeLeft, setAnimateBlockadeLeft] = useState({ opacity: 1, x: 0 });
     const [animateBlockadeRight, setAnimateBlockadeRight] = useState({ opacity: 1, x: 0 });
     const animationComplete = useRef(false);
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  
+  const defaultData = {
+    displayName: "",
+    profilePicture: "",
+    id: "",
+    bio: "",
+    tracks: [],
+    trackNames: [],
+    achievements: [],
+    photos: [],
+    location: "",
+    tags: [],
+    socials: {
+      instagram: "",
+      youtube: "",
+      facebook: "",
+      spotify: ""
+    },
+    video: ""
+  }
 
+  const pushDefaultData = async (userId) => {
+    console.log("Pushing default data for new user: ", userId);
+    const userDocRef = doc(db, "users", userId);
+    await setDoc(userDocRef, defaultData);
+  }
 
 
     const loginWithGoogle = async () => {
         try {
-            const provider = new GoogleAuthProvider();
-            const result = await signInWithPopup(auth, provider);
-            console.log("User signed in with Google: ");
-            console.log(result.user);
+          const provider = new GoogleAuthProvider();
+          const result = await signInWithPopup(auth, provider);
+          console.log("User signed in with Google: ");
+          console.log(result.user);
           setUser(result.user);
           
           // Check user's creation time
-          const creationTime = user.metadata.creationTime;
-          const lastSignInTime = user.metadata.lastSignInTime;
-
-          if (new Date(creationTime).toDateString() === new Date(lastSignInTime).toDateString()) {
+          const creationTime = result.user.metadata.creationTime;
+          const lastSignInTime = result.user.metadata.lastSignInTime;
+          console.log("Creation time: ", creationTime);
+          console.log("Last sign in time: ", lastSignInTime);
+          if (creationTime === lastSignInTime) {
+            // New user
+            pushDefaultData(result.user.uid);
             navigate(`/edit-profile`);
           } else {
-            navigate(`/profile/${result.user.uid}`); 
+            // Existing user
+            navigate(`/profile/${result.user.uid}`);
           }
             
 
