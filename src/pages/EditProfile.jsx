@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { getAuth } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { storage, ref, uploadBytes, getDownloadURL } from '../navigation/firebase-config'; // Adjust path as needed
+import { storage, ref, uploadBytes, getDownloadURL, auth } from '../navigation/firebase-config'; // Adjust path as needed
 
 
 
@@ -41,7 +41,6 @@ export default function EditProfile() {
     const [uploadAudioCount, setUploadAudioCount] = useState(1); // Number of upload components to show
     const [selectedAudioFiles, setSelectedAudioFiles] = useState([]); // Array of selected audio files
     const [profilePicture, setProfilePicture] = useState(null);
-    const auth = getAuth();
     const user = auth.currentUser;
     const navigate = useNavigate();
     
@@ -207,6 +206,7 @@ export default function EditProfile() {
                                         value={data.displayName}
                                         onChange={handleChange}
                                         placeholder={"Mariah Carey"}
+                                        required
                                     />
                                 </Col>
                             </Form.Group>
@@ -222,6 +222,7 @@ export default function EditProfile() {
                                         onChange={handleChange}
                                         placeholder={"I love to sing!"}
                                         rows={6}
+                                        required
                                     />
                                 </Col>
                             </Form.Group>
