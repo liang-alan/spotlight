@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { db } from '../navigation/firebase-config';
+import { db, auth } from '../navigation/firebase-config';
 import { Row, Col, Carousel, Button } from 'react-bootstrap';
 import {motion } from 'framer-motion';
  
@@ -51,7 +51,9 @@ export default function Profile() {
     const handleChatRequest = () => {
         console.log('Chat request');
     };
-    const socialArray = data.socials ? Object.entries(data.socials) : [];
+    const socialArray = data.socials ? Object.entries(data.socials).sort(([keyA], [keyB]) => {
+        return keyA.localeCompare(keyB); 
+    }) : [];
     const staggerDelay = 0.4; // for vinyl
 
     return <div>
@@ -117,9 +119,14 @@ export default function Profile() {
                             })
                         }
                     </Row>
-                    <Row>
-                        <Button variant="primary" onClick={handleChatRequest}>Chat</Button>
-                    </Row>
+
+                    {
+                        // dont display chat button if this is your profile
+                        auth.currentUser.uid === userId ? null : <Row>
+                            <Button variant="primary" onClick={handleChatRequest}>Chat</Button>
+                        </Row>
+                    }
+                    
                 </Col>
                 <Col xs={12} lg={9} className="text-start profile-column-spacing">
                     <h2>About {`${data.displayName}`}</h2>

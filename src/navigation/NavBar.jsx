@@ -5,6 +5,7 @@ import Context from "./context";
 import { collection, doc, getDoc } from "firebase/firestore";
 import { db } from "./firebase-config";
 import defaultPFP from '../img/default-pfp.jpg';
+import SpotlightBanner from '../img/logo-banner.png';
 
 import '../assets/styles.css';
 
@@ -32,8 +33,11 @@ export default function NavBar() {
     }, [user, defaultPFP]);
 
 
-    return <Navbar bg="dark" variant="dark" fixed="top" expand="lg">
+    return <Navbar bg="dark" variant="dark" fixed="top" expand="lg" className="navbar" >
         <Container>
+            <Navbar.Brand>
+                <img src={SpotlightBanner} className="navbar-logo d-none d-lg-block" alt="Logo" />
+            </Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse >
                 <Nav className="ms-auto">

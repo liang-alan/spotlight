@@ -330,7 +330,7 @@ export default function EditProfile() {
                         ))}
                     </Row>
                     
-                    <Button onClick={handleAddPhotoUploadComponent} className="mt-3" disabled={selectedFiles.length < uploadPhotoCount || uploadPhotoCount > 6}>
+                    <Button onClick={handleAddPhotoUploadComponent} className="my-3" disabled={selectedFiles.length < uploadPhotoCount || uploadPhotoCount > 6}>
                         Add More Photos
                     </Button> 
                 </Container>
@@ -366,7 +366,7 @@ export default function EditProfile() {
                     
                     <Button
                         onClick={handleAddAudioUploadComponent}
-                        className="mt-3"
+                        className="my-3"
                         disabled={selectedAudioFiles.length < uploadAudioCount || uploadAudioCount > 3}
                     >
                         Add More Songs

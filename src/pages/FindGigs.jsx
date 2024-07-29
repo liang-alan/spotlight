@@ -38,6 +38,7 @@ export default function FindGigs() {
             if (next && lastDoc) {
                 eventQuery = query(eventCollectionRef, startAfter(lastDoc), limit(10)); 
             } else {
+                setIsLoading(true);
                 eventQuery = query(eventCollectionRef, limit(10)); 
             }
 
@@ -50,8 +51,10 @@ export default function FindGigs() {
 
             setEvents(prevEvents => next ? [...prevEvents, ...eventList] : eventList);
             setLastDoc(eventSnapshot.docs[eventSnapshot.docs.length - 1]);
+            setIsLoading(false);
         } catch (error) {
             console.error("Error fetching events: ", error);
+            setIsLoading(false);
         }
     };
     const loadMore = () => {
@@ -73,11 +76,11 @@ export default function FindGigs() {
 
         >
         <h1>Find Events</h1>
-        <Button variant="primary" className="add-event-button"onClick={handleShow}>
-            Create an Event
-        </Button>
         <AddEventModal show={showModal} handleClose={handleClose} uid={user.uid} />
         <div className="events-container">
+            <Button variant="primary" className="add-event-button" onClick={handleShow}>
+                Create an Event
+            </Button>
             {events.map(event => (
                 <EventCard
                     key={event.id}
@@ -91,7 +94,7 @@ export default function FindGigs() {
                 />
             ))}
         </div>
-        {<Button onClick={loadMore}>Load More</Button>}
+        {hasMore && <Button onClick={loadMore}>Load More</Button>}
 
     </motion.div>;
 }

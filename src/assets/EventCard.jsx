@@ -10,6 +10,8 @@ import LoadingIcon from './LoadingIcon';
 
 import { FaMapPin, FaCalendar } from "react-icons/fa";
 
+import LogoSquare from '../img/logo-square.png';
+
 
 export default function EventCard(props) {
     const [data, setData] = useState(null);
@@ -43,14 +45,14 @@ export default function EventCard(props) {
     useEffect(() => {
         //preload pfp
         const img = new Image();
+        img.src = LogoSquare;
+
 
         if (props.image) {
             img.src = props.image;
-            img.onload = () => setIsImageLoaded(true);
-        } else {
-            img.src = "https://via.placeholder.com/300";
-            img.onload = () => setIsImageLoaded(true);
-        }
+        } 
+        img.onload = () => setIsImageLoaded(true);
+
     }, [props.image]);
     
     const handleGetProfile = () => {
@@ -61,11 +63,11 @@ export default function EventCard(props) {
         {(data && isImageLoaded) && (
             <Row className="event-card">
                 <Col xs={12} md={4}>
-                    <img src={props.image} alt="Event" className="event-image img-fluid" />
+                    <img src={props.image || LogoSquare} alt="Event" className="event-image img-fluid" />
                 </Col>
                 <Col xs={12} md={8}>
                     <h3 className="text-start">{props.title}</h3>
-                    <Row className="my-3">
+                    <Row className="my-2">
                         <Col xs={4} className="text-start clickable" onClick={handleGetProfile}>
                             <Row>
                                 <Col xs={2} style={{ paddingRight: 0, paddingTop: 0, paddingBottom: 0 }}>

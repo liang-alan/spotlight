@@ -27,6 +27,12 @@ export default function AddEventModal(props) {
                 await uploadBytes(imageRef, image);
                 setImageUrl(await getDownloadURL(imageRef));
             }
+
+            // if description is longer than 650 char
+            if (description.length > 650) {
+                alert('Description is too long');
+                return;
+            }
             
 
             const eventData = {
