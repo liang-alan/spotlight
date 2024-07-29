@@ -48,7 +48,6 @@ export default function AddEventModal(props) {
             // Store event data in Firestore with an auto-generated ID
             const eventCollectionRef = collection(db, 'events');
             await addDoc(eventCollectionRef, eventData);
-
             alert('Event added successfully!');
             props.handleClose();
         } catch (error) {

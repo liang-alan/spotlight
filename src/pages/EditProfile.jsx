@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { getAuth } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { storage, ref, uploadBytes, getDownloadURL, auth } from '../navigation/firebase-config'; // Adjust path as needed
 

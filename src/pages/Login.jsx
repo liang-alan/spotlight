@@ -3,9 +3,11 @@ import { auth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPasswo
 import { useContext, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc, collection } from "firebase/firestore";
 
 import { db } from '../navigation/firebase-config';
+
+import LogoBanner from '../img/logo-banner.png';
 
 
 
@@ -20,12 +22,12 @@ import defaultPFP from '../img/default-pfp.jpg';
 import { FaGoogle } from "react-icons/fa";
 
 export default function Login() {
-    const { user, setUser } = useContext(Context);
-    const [ logIn, setLogIn ] = useState(false);
-    const [credentials, setCredentials] = useState({ email: "", password: "", confirmPassword: "" });  
-    const [animateBlockadeLeft, setAnimateBlockadeLeft] = useState({ opacity: 1, x: 0 });
-    const [animateBlockadeRight, setAnimateBlockadeRight] = useState({ opacity: 1, x: 0 });
-    const animationComplete = useRef(false);
+  const { user, setUser } = useContext(Context);
+  const [ logIn, setLogIn ] = useState(false);
+  const [credentials, setCredentials] = useState({ email: "", password: "", confirmPassword: "" });  
+  const [animateBlockadeLeft, setAnimateBlockadeLeft] = useState({ opacity: 1, x: 0 });
+  const [animateBlockadeRight, setAnimateBlockadeRight] = useState({ opacity: 1, x: 0 });
+  const animationComplete = useRef(false);
   const navigate = useNavigate();
   
   const defaultData = {
@@ -45,7 +47,8 @@ export default function Login() {
       facebook: "",
       spotify: ""
     },
-    video: ""
+    video: "",
+    reviews: []
   }
 
   const pushDefaultData = async (userId) => {
@@ -163,7 +166,7 @@ export default function Login() {
     }
   return <div className="background-container">
     <div className="background-content">
-      <h1 className="text-center my-4">Spotlight</h1>
+      <img src={LogoBanner} alt="Logo Banner" className="login-banner" />
       <Container className="d-flex justify-content-center my-4">
         <Row>
           <Col xs={12} md={6} className="d-flex align-items-center login-column position-relative">

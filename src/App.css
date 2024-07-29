@@ -3,6 +3,7 @@
   width: 100%;
   margin: 0 auto;
   margin-top: 5vh;
+  margin-bottom:5vh;
   padding: 2rem;
   text-align: center;
 }
@@ -60,7 +61,7 @@
 }
 
 .background-content{
-  background-color: rgba(214, 214, 214, 0.8); /* or any other color with opacity */
+  background-color: rgba(192, 211, 233, 0.8); /* or any other color with opacity */
   width: 35%;
   padding: 1em;
   border-radius : 1em;

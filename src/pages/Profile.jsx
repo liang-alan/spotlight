@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 import { db, auth } from '../navigation/firebase-config';
-import { Row, Col, Carousel, Button } from 'react-bootstrap';
+import { Row, Col, Carousel, Button, Form} from 'react-bootstrap';
 import {motion } from 'framer-motion';
  
 
@@ -12,6 +12,8 @@ import Vinyl from '../assets/Vinyl';
 import { FaMapPin, FaSpotify, FaInstagram, FaFacebook, FaYoutube } from "react-icons/fa";
 import '../assets/styles.css';
 import defaultPFP from '../img/default-pfp.jpg';
+import AddReviewModal from '../assets/AddReviewModal';
+import ReviewCard from '../assets/ReviewCard';
 
 export default function Profile() {
     const { userId } = useParams();
@@ -19,29 +21,44 @@ export default function Profile() {
     const [isImageLoaded, setIsImageLoaded] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [firstAnimationComplete, setFirstAnimationComplete] = useState(false);
+    const [showReviewModal, setShowReviewModal] = useState(false);
+    const [reviews, setReviews] = useState([]);
 
     const navigate = useNavigate();
 
-    useEffect(() => { //search user
-        const fetchData = async () => {
-            const docRef = doc(db, "users", userId);
-            const docSnap = await getDoc(docRef);
-            if (docSnap.exists()) {
-                setData(docSnap.data());
-                
-                const img = new Image();
-                img.src = docSnap.data().profilePicture;
-                img.onload = () => setIsImageLoaded(true);
+    const fetchData = async () => {
+        const docRef = doc(db, "users", userId);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            setData(docSnap.data());
 
-                console.log(docSnap.data());
+            const img = new Image();
+            img.src = docSnap.data().profilePicture;
+            img.onload = () => setIsImageLoaded(true);
 
-            } else {
-                navigate('/404');
-            }
-            setIsLoading(false);
-        };
-        fetchData();
+            console.log(docSnap.data());
+
+        } else {
+            navigate('/404');
+        }
+
         
+        setIsLoading(false);
+    };
+
+    const fetchReviews = async () => {
+        setIsLoading(true);
+        const reviewRef = collection(db, "users", userId, "reviews");
+        const reviewSnapshot = await getDocs(reviewRef);
+        const reviewList = reviewSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setReviews(reviewList);
+        setIsLoading(false);
+    }
+
+
+    useEffect(() => { //search user
+        fetchData();
+        fetchReviews();
     }, [userId]);
 
     if (isLoading || !isImageLoaded) {
@@ -55,6 +72,14 @@ export default function Profile() {
         return keyA.localeCompare(keyB); 
     }) : [];
     const staggerDelay = 0.4; // for vinyl
+
+    const handleClose = () => setShowReviewModal(false);
+
+    const handleReviewAdded = () => {
+        // console.log('Review added');
+        fetchReviews();
+        setShowReviewModal(false);
+    }
 
     return <div>
         <h1 className="mb-5">{data.displayName}</h1>
@@ -147,8 +172,8 @@ export default function Profile() {
                 </Carousel>
                 
             </Row>
-            <Row className="profile-row">
-                {data.video && (
+            {data.video &&
+                <Row className="profile-row">
                     <div>
                         <h2>Highlighted Video</h2>
                         <iframe
@@ -159,9 +184,29 @@ export default function Profile() {
                             className="profile-video"
                         ></iframe>
                     </div>
-                )}
+                </Row>}
+            
+            <Row className="profile-row">
+                <AddReviewModal show={showReviewModal} handleClose={handleClose} pageid={userId} onReviewAdded={handleReviewAdded} />
+                <h2>Reviews</h2>
+                <Button className="my-5" onClick={() => setShowReviewModal(true)}>Leave a Review</Button>
+                {reviews && <div>
+                    {reviews.map((review, index) => (
+                        <ReviewCard
+                            key={index}
+                            {...review}
+                        />
+                    ))}
+
+                </div>
+                }
+                {!reviews && <p className="text-start">Be the first to leave a review!</p>}  
+                
+                
 
             </Row>
+            
+            
 
         </motion.div>
     </div>;
