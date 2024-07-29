@@ -13,6 +13,7 @@ export default function AddEventModal(props) {
     const [description, setDescription] = useState('');
     const [time, setTime] = useState('');
     const [image, setImage] = useState(null);
+    const [imageUrl, setImageUrl] = useState(null);
 
 
     const handleSubmit = async (e) => {
@@ -21,9 +22,12 @@ export default function AddEventModal(props) {
 
         try {
             // Upload image to Firebase Storage
-            const imageRef = ref(storage, `events/${image.name}`);
-            await uploadBytes(imageRef, image);
-            const imageUrl = await getDownloadURL(imageRef);
+            if (image !== null) {
+                const imageRef = ref(storage, `events/${image.name}`);
+                await uploadBytes(imageRef, image);
+                setImageUrl(await getDownloadURL(imageRef));
+            }
+            
 
             const eventData = {
                 title,
@@ -31,7 +35,7 @@ export default function AddEventModal(props) {
                 time,
                 location,
                 description,
-                image: imageUrl,
+                image: imageUrl === undefined ? null : imageUrl,
                 user: props.uid
             };
 

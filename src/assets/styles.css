@@ -182,7 +182,7 @@
 
 .event-card {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     padding: 0.5em;
     margin-bottom: 2em;
@@ -213,4 +213,9 @@
 .clickable:hover {
     background-color: #f0f0f0; /* Light grey background on hover */
     border-radius: 5px; /* Rounded corners */
+}
+
+.add-event-button {
+    margin-bottom: 1em;
+    width : 100%;
 }

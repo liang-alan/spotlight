@@ -42,8 +42,9 @@ export default function EventCard(props) {
 
     useEffect(() => {
         //preload pfp
+        const img = new Image();
+
         if (props.image) {
-            const img = new Image();
             img.src = props.image;
             img.onload = () => setIsImageLoaded(true);
         } else {
@@ -56,9 +57,9 @@ export default function EventCard(props) {
         navigate(`/profile/${props.user}`);
     }
 
-    return <Container className="event-card">
+    return <div>
         {(data && isImageLoaded) && (
-            <Row>
+            <Row className="event-card">
                 <Col xs={12} md={4}>
                     <img src={props.image} alt="Event" className="event-image img-fluid" />
                 </Col>
@@ -88,6 +89,7 @@ export default function EventCard(props) {
             </Row>
         )}
         {(!data || !isImageLoaded) && <LoadingIcon />}
+    </div>
         
-    </Container>;
+   ;
 }

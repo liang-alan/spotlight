@@ -52,7 +52,7 @@ export default function Profile() {
         console.log('Chat request');
     };
     const socialArray = data.socials ? Object.entries(data.socials) : [];
-    const staggerDelay = 0.5; // for vinyl
+    const staggerDelay = 0.4; // for vinyl
 
     return <div>
         <h1 className="mb-5">{data.displayName}</h1>
@@ -74,7 +74,7 @@ export default function Profile() {
                         {data.tracks.map((track, index) => (
                             <Col xs={4} key={index} style={{ position: 'relative' }}>
                                 <motion.div
-                                    initial={{ opacity: 0, x: -250, scale:0.75 }} // Initial state: hidden and shifted left
+                                    initial={{ opacity: 0, x: -250, scale:0.6 }} // Initial state: hidden and shifted left
                                     animate={{
                                         opacity: firstAnimationComplete ? 1 : 0,
                                         x: firstAnimationComplete ? 0 : -250,

@@ -6,11 +6,14 @@ import { Button } from "react-bootstrap";
 
 
 import { getAuth } from "firebase/auth";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs ,query, limit, startAfter } from "firebase/firestore";
 
 import { db } from '../navigation/firebase-config';
 
 import LoadingIcon from "../assets/LoadingIcon";
+
+import { motion } from 'framer-motion';
+import '../assets/styles.css';
 
 
 export default function FindGigs() {
@@ -19,25 +22,43 @@ export default function FindGigs() {
     const [showModal, setShowModal] = useState(false);
     const [events, setEvents] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [lastDoc, setLastDoc] = useState(null);
+    const [hasMore, setHasMore] = useState(true);
 
     const handleShow = () => setShowModal(true);
     const handleClose = () => setShowModal(false);
     const auth = getAuth();
     const user = auth.currentUser;
 
-    useEffect(() => {
-        const fetchEvents = async () => {
-            try {
-                const eventCollectionRef = collection(db, 'events');
-                const eventSnapshot = await getDocs(eventCollectionRef);
-                const eventList = eventSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                setEvents(eventList);
-                setIsLoading(false);
-            } catch (error) {
-                console.error("Error fetching events: ", error);
-            }
-        };
+    const fetchEvents = async (next = false) => {
+        try {
+            const eventCollectionRef = collection(db, 'events');
+            let eventQuery;
 
+            if (next && lastDoc) {
+                eventQuery = query(eventCollectionRef, startAfter(lastDoc), limit(10)); 
+            } else {
+                eventQuery = query(eventCollectionRef, limit(10)); 
+            }
+
+            const eventSnapshot = await getDocs(eventQuery);
+            const eventList = eventSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+            if (eventSnapshot.docs.length < 10) {
+                setHasMore(false);
+            }
+
+            setEvents(prevEvents => next ? [...prevEvents, ...eventList] : eventList);
+            setLastDoc(eventSnapshot.docs[eventSnapshot.docs.length - 1]);
+        } catch (error) {
+            console.error("Error fetching events: ", error);
+        }
+    };
+    const loadMore = () => {
+        fetchEvents(true);
+    };
+
+    useEffect(() => {
         fetchEvents();
     }, []);
 
@@ -45,10 +66,15 @@ export default function FindGigs() {
         return <LoadingIcon />;
     }
 
-    return <div>
+    return <motion.div
+        initial={{ opacity: 0, y: 200 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, ease: 'easeOut' }}
+
+        >
         <h1>Find Events</h1>
-        <Button variant="primary" onClick={handleShow}>
-            Add Event
+        <Button variant="primary" className="add-event-button"onClick={handleShow}>
+            Create an Event
         </Button>
         <AddEventModal show={showModal} handleClose={handleClose} uid={user.uid} />
         <div className="events-container">
@@ -65,5 +91,7 @@ export default function FindGigs() {
                 />
             ))}
         </div>
-    </div>;
+        {<Button onClick={loadMore}>Load More</Button>}
+
+    </motion.div>;
 }
