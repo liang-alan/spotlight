@@ -1,6 +1,6 @@
 This is SpotLight!
 
-SpotLight is an App created for the Empower2.0 2024 Hackathon for the SonicBids Live Music Directory & Professional Network Web App track.
+SpotLight is an App created for the Empower2.0 2024 Hackathon for the Kinetik SonicBids Live Music Directory & Professional Network Web App track.
 
 I chose to participate in this track because of my love for music. Over this past year, I have been consistenly reteaching myself how to play the piano. I also love to create "remixes" of songs as well as some of my own songs on my freetime as well. I believe music is powerful and its amazing to see how unifying music can be.
 
