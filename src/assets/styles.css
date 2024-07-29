@@ -60,6 +60,12 @@
     object-fit: cover;
 }
 
+.profile-picture-square {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+}
+
 .navbar-spacing {
     margin-left : 0.5em;
     margin-right : 0.5em;

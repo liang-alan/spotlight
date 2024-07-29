@@ -11,6 +11,7 @@ import LoadingIcon from '../assets/LoadingIcon';
 import Vinyl from '../assets/Vinyl';
 import { FaMapPin, FaSpotify, FaInstagram, FaFacebook, FaYoutube } from "react-icons/fa";
 import '../assets/styles.css';
+import defaultPFP from '../img/default-pfp.jpg';
 
 export default function Profile() {
     const { userId } = useParams();
@@ -20,13 +21,6 @@ export default function Profile() {
     const [firstAnimationComplete, setFirstAnimationComplete] = useState(false);
 
     const navigate = useNavigate();
-    
-
-    useEffect(() => {
-        console.log(userId);
-    }, [userId]);
-
-
 
     useEffect(() => { //search user
         const fetchData = async () => {
@@ -34,8 +28,7 @@ export default function Profile() {
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
                 setData(docSnap.data());
-
-                //preload pfp
+                
                 const img = new Image();
                 img.src = docSnap.data().profilePicture;
                 img.onload = () => setIsImageLoaded(true);
@@ -49,7 +42,7 @@ export default function Profile() {
         };
         fetchData();
         
-    }, []);
+    }, [userId]);
 
     if (isLoading || !isImageLoaded) {
         return <LoadingIcon />;
@@ -73,7 +66,7 @@ export default function Profile() {
         >
             <Row className="profile-row">
                 <Col xs={12} lg={3} style={{ position: 'relative' }}>
-                    <img src={data.profilePicture} alt="Profile Picture" />
+                    <img src={data.profilePicture} alt="Profile Picture" className="profile-picture-square" />
                 </Col>
                 
                 <Col xs={12} lg={9} className="text-start">
@@ -110,6 +103,9 @@ export default function Profile() {
                     <Row>
                         {
                             socialArray.map(([key, value]) => {
+                                if (!value) {
+                                    return null;
+                                }
                                 return <Col key={key} xs={6} className="text-start">
                                     <a href={value} target="_blank" rel="noreferrer">{
                                         key === 'spotify' ? <FaSpotify className="profile-social-icon"/> :
@@ -145,15 +141,18 @@ export default function Profile() {
                 
             </Row>
             <Row className="profile-row">
-                <h2>Highlighted Video</h2>
-                <iframe
-                    src={"https://www.youtube.com/embed/" + data.video.split('watch?v=')[1]}
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    title="YouTube video player"
-                    className="profile-video"
-                ></iframe>
+                {data.video && (
+                    <div>
+                        <h2>Highlighted Video</h2>
+                        <iframe
+                            src={"https://www.youtube.com/embed/" + data.video.split('watch?v=')[1]}
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                            title="YouTube video player"
+                            className="profile-video"
+                        ></iframe>
+                    </div>
+                )}
 
             </Row>
 

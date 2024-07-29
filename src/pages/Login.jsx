@@ -3,7 +3,7 @@ import { auth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPasswo
 import { useContext, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 
 import { db } from '../navigation/firebase-config';
 
@@ -15,6 +15,7 @@ import '../App.css';
 
 import LoginBlockade from '../assets/LoginBlockade';
 import { motion, useAnimation } from 'framer-motion';
+import defaultPFP from '../img/default-pfp.jpg';
 
 import { FaGoogle } from "react-icons/fa";
 
@@ -29,7 +30,7 @@ export default function Login() {
   
   const defaultData = {
     displayName: "",
-    profilePicture: "",
+    profilePicture: defaultPFP,
     id: "",
     bio: "",
     tracks: [],
@@ -50,9 +51,32 @@ export default function Login() {
   const pushDefaultData = async (userId) => {
     console.log("Pushing default data for new user: ", userId);
     const userDocRef = doc(db, "users", userId);
-    await setDoc(userDocRef, defaultData);
+    await setDoc(userDocRef, {...defaultData, displayName: userId});
   }
 
+  const searchUser = async (uid) => {
+    try {
+      const docRef = doc(db, "users", uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const userData = docSnap.data();
+        if (userData.displayName) {
+          console.log("User found: ", userData.displayName);
+          return userData.displayName;
+        } else {
+          console.log("User found but no displayName.");
+          return null;
+        }
+      } else {
+        console.log("No user found for UID: ", uid);
+        return null;
+      }
+    } catch (error) {
+      console.error("Error searching for user: ", error);
+      return null;
+    }
+  };
 
     const loginWithGoogle = async () => {
         try {
@@ -62,12 +86,8 @@ export default function Login() {
           console.log(result.user);
           setUser(result.user);
           
-          // Check user's creation time
-          const creationTime = result.user.metadata.creationTime;
-          const lastSignInTime = result.user.metadata.lastSignInTime;
-          console.log("Creation time: ", creationTime);
-          console.log("Last sign in time: ", lastSignInTime);
-          if (creationTime === lastSignInTime) {
+          if (await searchUser(result.user.uid) === null) {
+            
             // New user
             pushDefaultData(result.user.uid);
             navigate(`/edit-profile`);
@@ -78,7 +98,7 @@ export default function Login() {
             
 
         } catch (error) {
-            console.error("An Error has occured while signing in with Google: ", error);
+            console.error(error);
         }
     }
     const signUpWithEmail = async (e) => {
@@ -92,12 +112,14 @@ export default function Login() {
             const result = await createUserWithEmailAndPassword(auth, credentials.email, credentials.password);
             setUser(result.user);
             console.log("User signed up: ", result.user);
+            pushDefaultData(result.user.uid);
+            navigate(`/edit-profile`);
             alert("Successfully signed up!");
             navigate(`/edit-profile`); 
 
         } catch (error) {
             console.error("Error signing up: ", error.message);
-            alert("Error signing up: ", error.message);
+            alert(error.message);
         }
     }
     const loginWithEmail = async (e) => {
@@ -111,7 +133,7 @@ export default function Login() {
 
         } catch (error) {
             console.error("Error signing in: ", error.message);
-            alert("Error signing in: ", error.message);
+            alert(error.message);
         }
     }
 
