@@ -382,3 +382,19 @@
 .chat-message.other .timestamp {
     left: 10px;
 }
+
+.achievement-image {
+    align-self : center;
+    justify-self : center;
+    max-height : 16vh;
+    height : 150px;
+    max-width : 100%;
+    object-fit : contain;
+}
+
+.achievement-container {
+    padding : 1em;
+    border-radius : 8px;
+    height : 20vh;
+    max-height: 200px;
+}

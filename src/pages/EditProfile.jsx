@@ -12,6 +12,8 @@ import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import LoadingIcon from '../assets/LoadingIcon';
 import UploadMedia from '../assets/UploadMedia';
 import ProfilePicture from '../assets/ProfilePicture';
+import AddAchievementModal from '../assets/AddAchievementModal';
+import AchievementCard from '../assets/AchievementCard';
 
 
 export default function EditProfile() {
@@ -36,6 +38,7 @@ export default function EditProfile() {
     });
 
     const [isLoading, setIsLoading] = useState(true);
+    const [achievementModal , setAchievementModal] = useState(false);
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [uploadPhotoCount, setUploadPhotoCount] = useState(1); // Start with 1 upload component
     const [uploadAudioCount, setUploadAudioCount] = useState(1); // Number of upload components to show
@@ -45,7 +48,7 @@ export default function EditProfile() {
     const navigate = useNavigate();
     
     useEffect(() => {
-        console.log("CurrUser: ", user);
+        // console.log("CurrUser: ", user);
         const fetchUserData = async () => {
             if (user) {
                 const docRef = doc(db, "users", user.uid);
@@ -57,7 +60,6 @@ export default function EditProfile() {
                     setSelectedAudioFiles(docSnap.data().tracks);
                     setSelectedFiles(docSnap.data().photos);
                     setProfilePicture(docSnap.data().profilePicture);
-                    console.log("Document data:", docSnap.data());
                     
                 } else {
                     console.log("No such document!");
@@ -142,6 +144,15 @@ export default function EditProfile() {
         }));
     };
 
+    const handleSubmitAchievement = (achievementData) => {
+        console.log(achievementData);
+        setData(prevData => ({
+            ...prevData,
+            achievements: [...prevData.achievements, achievementData]
+        }));
+        setAchievementModal(false);
+    };
+
     const handleChangeSocials = (e) => {
         const { name, value } = e.target;
         setData(prevData => ({
@@ -183,8 +194,10 @@ export default function EditProfile() {
     if (isLoading) {
         return <LoadingIcon />;
     }
+    
 
     return (
+
         <Container>
             <h1>Edit Profile</h1>
             <Form onSubmit={handleSubmit}>
@@ -314,8 +327,9 @@ export default function EditProfile() {
                 </Container>
                 
 
-                <h2>Upload Photos</h2>
                 <Container className="mb-5 border">
+                    <h2>Upload Photos</h2>
+
                     <Row>
                         {Array.from({ length: uploadPhotoCount }, (_, index) => (
                             <Col xs={6} lg={4} key={index}>
@@ -334,8 +348,9 @@ export default function EditProfile() {
                     </Button> 
                 </Container>
 
-                <h2>Upload Audio</h2>
                 <Container className="mb-5 border">
+                    <h2>Upload Audio</h2>
+
                     <Row>
                         {Array.from({ length: uploadAudioCount }, (_, index) => (
                             <Col xs={6} lg={4} key={index}>
@@ -371,6 +386,22 @@ export default function EditProfile() {
                         Add More Songs
                     </Button>
                 </Container>
+
+                <Container className="mb-5 border">
+
+                    <h2>Achievements</h2>
+                    
+                    <AddAchievementModal show={achievementModal} handleClose={() => setAchievementModal(false)} handleSubmitAchievement={handleSubmitAchievement} />
+                    {
+                        data.achievements.map((achievement, index) => (
+                            <Row key={index} className="mb-3">
+                                <AchievementCard {...achievement} />
+                            </Row>
+                        ))
+                    }
+                    <Button onClick={() => setAchievementModal(true)}>Add Achievement</Button>
+                </Container>
+
 
                 <Button variant="primary" type="submit">
                     Save Changes

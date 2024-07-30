@@ -13,6 +13,7 @@ import { FaMapPin, FaSpotify, FaInstagram, FaFacebook, FaYoutube } from "react-i
 import '../assets/styles.css';
 import AddReviewModal from '../assets/AddReviewModal';
 import ReviewCard from '../assets/ReviewCard';
+import AchievementCard from '../assets/AchievementCard';
 
 export default function Profile() {
     const { userId } = useParams();
@@ -187,6 +188,16 @@ export default function Profile() {
                 </Row>}
             
             <Row className="profile-row">
+                <h2>Achievements</h2>
+                {data.achievements.map((achievement, index) => (
+                    <AchievementCard
+                        key={index}
+                        {...achievement}
+                    />
+                ))}
+            </Row>
+            
+            <Row className="profile-row">
                 <AddReviewModal show={showReviewModal} handleClose={handleClose} pageid={userId} onReviewAdded={handleReviewAdded} />
                 <h2>Reviews</h2>
                 <Button className="my-5" onClick={() => setShowReviewModal(true)}>Leave a Review</Button>
@@ -201,7 +212,6 @@ export default function Profile() {
                 </div>
                 }
                 {!reviews && <p className="text-start">Be the first to leave a review!</p>}  
-                
                 
 
             </Row>
