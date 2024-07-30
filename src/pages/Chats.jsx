@@ -2,19 +2,17 @@ import { useContext, useEffect, useState, useRef} from 'react';
 import { doc, getDoc, collection, getDocs, setDoc, updateDoc, arrayUnion} from "firebase/firestore";
 import { db, auth, getPosterInformation } from '../navigation/firebase-config';
 import { Row, Col, Container, Button, Form } from 'react-bootstrap';
-import { motion } from 'framer-motion';
 import { useNavigate, useParams } from 'react-router-dom';
 
 
 import LoadingIcon from '../assets/LoadingIcon';
-import Vinyl from '../assets/Vinyl';
-import { FaMapPin, FaSpotify, FaInstagram, FaFacebook, FaYoutube } from "react-icons/fa";
+
 import '../assets/styles.css';
 import defaultPFP from '../img/default-pfp.jpg';
-import AddReviewModal from '../assets/AddReviewModal';
-import ReviewCard from '../assets/ReviewCard';
+
 import ChatUserCard from '../assets/ChatUserCard';
 import ChatMessage from '../assets/ChatMessage';
+
 
 
 

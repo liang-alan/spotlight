@@ -412,3 +412,7 @@
     border-radius: 4px; 
     display: inline-block; 
 }
+
+.pac-container {
+    z-index: 1051 !important;
+}

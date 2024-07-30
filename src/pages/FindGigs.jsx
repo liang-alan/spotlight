@@ -67,6 +67,10 @@ export default function FindGigs() {
         return <LoadingIcon />;
     }
 
+    const refreshEvents = () => {
+        fetchEvents();
+    }
+
     return <motion.div
         initial={{ opacity: 0, y: 200 }}
         animate={{ opacity: 1, y: 0 }}
@@ -74,7 +78,7 @@ export default function FindGigs() {
 
         >
         <h1>Find Events</h1>
-        <AddEventModal show={showModal} handleClose={handleClose} uid={user.uid} />
+        <AddEventModal show={showModal} handleClose={handleClose} uid={user.uid} refreshEvents={refreshEvents} />
         <div className="events-container">
             <Button variant="primary" className="add-event-button" onClick={handleShow}>
                 Create an Event

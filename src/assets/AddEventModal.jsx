@@ -1,72 +1,61 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
 import { db, storage } from '../navigation/firebase-config';
 import { collection, addDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-
 import usePlacesAutocomplete from '../navigation/usePlacesAutocomplete';
 
-
-
-export default function AddEventModal(props) {
+const AddEventModal = (props) => {
     const [title, setTitle] = useState('');
     const [date, setDate] = useState('');
     const [location, setLocation] = useState('');
+    const [locationCoords, setLocationCoords] = useState([]);
     const [description, setDescription] = useState('');
     const [time, setTime] = useState('');
     const [image, setImage] = useState(null);
     const [imageUrl, setImageUrl] = useState(null);
 
     const handlePlaceSelect = (place) => {
-        console.log(place.formatted_address);
+        console.log('Selected place:', place.formatted_address);
+        setLocationCoords([place.geometry.location.lat(), place.geometry.location.lng()]);
         setLocation(place.formatted_address);
-
-        console.log(data);
     };
-
-    useEffect(() => {
-        console.log(location);
-    }, [location]);
 
     const inputRef = usePlacesAutocomplete(handlePlaceSelect);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
-
         try {
-            // Upload image to Firebase Storage
             if (image !== null) {
                 const imageRef = ref(storage, `events/${image.name}`);
                 await uploadBytes(imageRef, image);
-                setImageUrl(await getDownloadURL(imageRef));
+                const url = await getDownloadURL(imageRef);
+                setImageUrl(url);
             }
 
-            // if description is longer than 650 char
             if (description.length > 650) {
                 alert('Description is too long');
                 return;
             }
-            
 
             const eventData = {
                 title,
                 date,
                 time,
                 location,
+                locationCoords,
                 description,
-                image: imageUrl === undefined ? null : imageUrl,
+                image: imageUrl ? imageUrl : null,
                 user: props.uid
             };
 
-            // Store event data in Firestore with an auto-generated ID
             const eventCollectionRef = collection(db, 'events');
             await addDoc(eventCollectionRef, eventData);
             alert('Event added successfully!');
             props.handleClose();
+            props.refreshEvents();
         } catch (error) {
             console.error('Error adding event: ', error);
-            console.log(props);
             alert('Failed to add event.');
         }
     };
@@ -77,8 +66,12 @@ export default function AddEventModal(props) {
         }
     };
 
+    useEffect(() => {
+        console.log('Location updated:', location);
+    }, [location]);
+
     return (
-        <Modal show={props.show} onHide={props.handleClose}>
+        <Modal show={props.show} onHide={props.handleClose} style={{ zIndex : 1050}}>
             <Modal.Header closeButton>
                 <Modal.Title>Add Event</Modal.Title>
             </Modal.Header>
@@ -109,7 +102,6 @@ export default function AddEventModal(props) {
                             type="time"
                             value={time}
                             onChange={(e) => setTime(e.target.value)}
-                            
                             required
                         />
                     </Form.Group>
@@ -151,3 +143,5 @@ export default function AddEventModal(props) {
         </Modal>
     );
 }
+
+export default AddEventModal;
