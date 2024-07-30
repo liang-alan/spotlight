@@ -3,7 +3,7 @@ import { doc, getDoc, collection, getDocs, setDoc, updateDoc, arrayUnion} from "
 import { db, auth, getPosterInformation } from '../navigation/firebase-config';
 import { Row, Col, Container, Button, Form } from 'react-bootstrap';
 import { motion } from 'framer-motion';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 
 import LoadingIcon from '../assets/LoadingIcon';
@@ -30,6 +30,7 @@ export default function Chats() {
     const { senderId } = useParams();
     const userId = auth.currentUser.uid;
     const chatEndRef = useRef(null);
+    const navigate = useNavigate();
 
 
     const fetchMessagesSingle= async () => {
@@ -67,7 +68,7 @@ export default function Chats() {
     }
 
     const createNewChatter = async () => {
-        console.log(senderId);
+        // console.log(senderId);
         const userRef = doc(db, "users", userId, "messages", senderId);
 
         // Ensure the userRef document exists and has a messages field
@@ -78,7 +79,7 @@ export default function Chats() {
     };
 
     useEffect(() => {
-        console.log(senderId);
+        // console.log(senderId);
         if (senderId) {
             createNewChatter();
         }
@@ -94,25 +95,30 @@ export default function Chats() {
         setIsLoading(false);
     }
 
-    const findMessages = async (id) => {
-        setIsLoading(true);
-        userList.forEach(user => {
-            if (user[0] === id) {
-                setIsLoading(false);
-                setMessages(user[1].messages);
-            }
-        });
-        setIsLoading(false);
-    }
+    // const findMessages = async (id) => {
+    //     setIsLoading(true);
+    //     userList.forEach(user => {
+    //         if (user[0] === id) {
+    //             setIsLoading(false);
+    //             setMessages(user[1].messages);
+    //         }
+    //     });
+    //     setIsLoading(false);
+    // }
 
 
    
 
     const handleChangeUser = (user) => {
         setCurrUser(user);
-        fetchUserData(currUser);
-        findMessages(user);
     }
+
+    useEffect(() => {
+        if (currUser.length > 0) {
+            fetchUserData(currUser);
+            fetchMessagesSingle();
+        }
+    }, [currUser]);
 
     const handleSendMessage = async (e) => {
         e.preventDefault();
@@ -166,6 +172,10 @@ export default function Chats() {
         }
     };
 
+    const handleClick = () => {
+        navigate(`/profile/${currUser}`);
+    }
+
     useEffect(() => {
         if (chatEndRef.current) {
             chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -195,7 +205,7 @@ export default function Chats() {
                 </Col>
                 {currUser ? (
                     <Col xs={8} className="text-start chat-messages">
-                        <Row className="chat-header">
+                        <Row className="chat-header clickable" onClick={handleClick}>
                             <Col xs={2} className="text-start" style={{ height: '100%' }}>
                                 <img src={currUserData.profilePicture} alt="profile" className="chat-user-image" />
                             </Col>

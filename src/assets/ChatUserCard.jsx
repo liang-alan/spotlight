@@ -27,7 +27,7 @@ export default function ChatUserCard(props) {
 
     
     if (isLoading) {
-        return <LoadingIcon />;
+        return <></>;
     }
     
     return (

@@ -1,11 +1,12 @@
 import { Alert, Form, Button, Container, Row, Col } from 'react-bootstrap';
-import { auth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword } from '../navigation/firebase-config';
+import { auth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, storage, getDownloadURL } from '../navigation/firebase-config';
 import { useContext, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { doc, setDoc, getDoc, collection } from "firebase/firestore";
 
 import { db } from '../navigation/firebase-config';
+import { getStorage, ref,  } from "firebase/storage";
 
 import LogoBanner from '../img/logo-banner.png';
 
@@ -17,7 +18,6 @@ import '../App.css';
 
 import LoginBlockade from '../assets/LoginBlockade';
 import { motion, useAnimation } from 'framer-motion';
-import defaultPFP from '../img/default-pfp.jpg';
 
 import { FaGoogle } from "react-icons/fa";
 
@@ -32,7 +32,7 @@ export default function Login() {
   
   const defaultData = {
     displayName: "",
-    profilePicture: defaultPFP,
+    profilePicture: "",
     id: "",
     bio: "",
     tracks: [],
@@ -51,8 +51,23 @@ export default function Login() {
     reviews: []
   }
 
+  const getPhotoURL = async () => {
+    try {
+      const storageRef = ref(storage, 'default.jpg');
+      const url = await getDownloadURL(storageRef);
+      console.log('Download URL:', url);
+      defaultData.profilePicture = url;
+    } catch (error) {
+      console.error('Error getting download URL:', error);
+    }
+  };
+
+ 
+
+
   const pushDefaultData = async (userId) => {
     console.log("Pushing default data for new user: ", userId);
+    await getPhotoURL();
     const userDocRef = doc(db, "users", userId);
     await setDoc(userDocRef, {...defaultData, displayName: userId});
   }

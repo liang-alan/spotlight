@@ -11,7 +11,6 @@ import LoadingIcon from '../assets/LoadingIcon';
 import Vinyl from '../assets/Vinyl';
 import { FaMapPin, FaSpotify, FaInstagram, FaFacebook, FaYoutube } from "react-icons/fa";
 import '../assets/styles.css';
-import defaultPFP from '../img/default-pfp.jpg';
 import AddReviewModal from '../assets/AddReviewModal';
 import ReviewCard from '../assets/ReviewCard';
 
