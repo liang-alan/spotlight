@@ -18,9 +18,10 @@ const firebaseConfig = {
   projectId: "spotlight-7a223",
   storageBucket: "spotlight-7a223.appspot.com",
   messagingSenderId: "402184955691",
-  appId: "1:402184955691:web:9ff4081db82e19f0dc476e",
-  measurementId: "G-LCQQB5ZEBS"
+  appId: "1:402184955691:web:7af5faaec76b58ebdc476e",
+  measurementId: "G-T1RY5ZJ35R"
 };
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
