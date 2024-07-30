@@ -23,6 +23,7 @@ export default function SpotlightRouter() {
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Spotlight />}>
+                    <Route path="chats/:senderId" element={<Chats />} />
                     <Route path="chats" element={<Chats />} />
                     <Route path="find-artists" element={<FindArtists />} />
                     <Route path="find-gigs" element={<FindGigs />} />

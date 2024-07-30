@@ -1,5 +1,5 @@
 import { Row, Col, Container } from 'react-bootstrap';
-import { auth, db } from '../navigation/firebase-config';
+import { db, getPosterInformation } from '../navigation/firebase-config';
 import { doc, getDoc } from "firebase/firestore";
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -17,7 +17,6 @@ export default function ReviewCard(props) {
     const navigate = useNavigate();
 
     const getPosterInformation = async () => {
-        const user = auth.currentUser;
         const docRef = doc(db, "users", props.user);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {

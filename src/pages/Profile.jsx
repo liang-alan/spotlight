@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 import { db, auth } from '../navigation/firebase-config';
 import { Row, Col, Carousel, Button, Form} from 'react-bootstrap';
-import {motion } from 'framer-motion';
+import { motion } from 'framer-motion';
  
 
 import LoadingIcon from '../assets/LoadingIcon';
@@ -67,6 +67,7 @@ export default function Profile() {
 
     const handleChatRequest = () => {
         console.log('Chat request');
+        navigate(`/chats/${userId}`);
     };
     const socialArray = data.socials ? Object.entries(data.socials).sort(([keyA], [keyB]) => {
         return keyA.localeCompare(keyB); 

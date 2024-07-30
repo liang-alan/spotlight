@@ -5,10 +5,9 @@ import { useState, useEffect} from "react";
 import { Button } from "react-bootstrap";
 
 
-import { getAuth } from "firebase/auth";
 import { collection, getDocs ,query, limit, startAfter } from "firebase/firestore";
 
-import { db } from '../navigation/firebase-config';
+import { db, auth } from '../navigation/firebase-config';
 
 import LoadingIcon from "../assets/LoadingIcon";
 
@@ -27,7 +26,6 @@ export default function FindGigs() {
 
     const handleShow = () => setShowModal(true);
     const handleClose = () => setShowModal(false);
-    const auth = getAuth();
     const user = auth.currentUser;
 
     const fetchEvents = async (next = false) => {
