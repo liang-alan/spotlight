@@ -126,7 +126,11 @@ export default function Profile() {
                     data.location ? <p> <FaMapPin /> {data.location}</p> : null
                 }
                     {
-                        data.tags ? <p>Tags: {data.tags.join(', ')}</p> : null
+                        <div className="tags-container">
+                            {data.tags ? data.tags.map((tag, index) => (
+                                <p key={index} className="tag">{tag}</p>
+                            )) : null}
+                        </div>
                     }
                     <Row>
                         {
