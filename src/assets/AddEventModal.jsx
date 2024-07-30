@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { db, storage } from '../navigation/firebase-config';
 import { collection, addDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+
+import usePlacesAutocomplete from '../navigation/usePlacesAutocomplete';
 
 
 
@@ -15,6 +17,18 @@ export default function AddEventModal(props) {
     const [image, setImage] = useState(null);
     const [imageUrl, setImageUrl] = useState(null);
 
+    const handlePlaceSelect = (place) => {
+        console.log(place.formatted_address);
+        setLocation(place.formatted_address);
+
+        console.log(data);
+    };
+
+    useEffect(() => {
+        console.log(location);
+    }, [location]);
+
+    const inputRef = usePlacesAutocomplete(handlePlaceSelect);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -95,6 +109,7 @@ export default function AddEventModal(props) {
                             type="time"
                             value={time}
                             onChange={(e) => setTime(e.target.value)}
+                            
                             required
                         />
                     </Form.Group>
@@ -105,6 +120,7 @@ export default function AddEventModal(props) {
                             placeholder="Enter event location"
                             value={location}
                             onChange={(e) => setLocation(e.target.value)}
+                            ref={inputRef}
                             required
                         />
                     </Form.Group>

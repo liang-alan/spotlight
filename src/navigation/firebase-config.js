@@ -3,6 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { Loader } from '@googlemaps/js-api-loader';
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -21,6 +22,12 @@ const firebaseConfig = {
   appId: "1:402184955691:web:7af5faaec76b58ebdc476e",
   measurementId: "G-T1RY5ZJ35R"
 };
+
+const loader = new Loader({
+  apiKey: firebaseConfig.apiKey,
+  version: "weekly",
+  libraries: ["places"]
+});
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -42,6 +49,7 @@ const getPosterInformation = async (userId) => {
 
 
 export {
+  loader,
     getDownloadURL,
     storage,
     ref,

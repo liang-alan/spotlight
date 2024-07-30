@@ -14,7 +14,7 @@ import UploadMedia from '../assets/UploadMedia';
 import ProfilePicture from '../assets/ProfilePicture';
 import AddAchievementModal from '../assets/AddAchievementModal';
 import AchievementCard from '../assets/AchievementCard';
-
+import usePlacesAutocomplete from '../navigation/usePlacesAutocomplete';
 
 export default function EditProfile() {
     const [data, setData] = useState({
@@ -27,6 +27,7 @@ export default function EditProfile() {
         achievements: [],
         photos: [],
         location: "",
+        locationCoords : [],
         tags: [],
         socials: {
             instagram: "",
@@ -37,6 +38,7 @@ export default function EditProfile() {
         video : ""
     });
 
+    const [location , setLocation] = useState("");
     const [isLoading, setIsLoading] = useState(true);
     const [achievementModal , setAchievementModal] = useState(false);
     const [selectedFiles, setSelectedFiles] = useState([]);
@@ -46,7 +48,28 @@ export default function EditProfile() {
     const [profilePicture, setProfilePicture] = useState(null);
     const user = auth.currentUser;
     const navigate = useNavigate();
-    
+
+    const handlePlaceSelect = (place) => {
+        console.log(place.formatted_address);
+        setData({
+            ...data,
+            location: place.formatted_address,
+            locationCoords: [place.geometry.location.lat(), place.geometry.location.lng()]
+        });
+        setLocation(place.formatted_address);
+
+        console.log(data);
+    };
+
+    const inputRef = usePlacesAutocomplete(handlePlaceSelect);
+    useEffect(() => {
+
+        if (data.location) {
+            setLocation(data.location);
+        }
+        // console.log("My Data: ", data);
+    }, [data.location]);
+
     useEffect(() => {
         // console.log("CurrUser: ", user);
         const fetchUserData = async () => {
@@ -247,10 +270,11 @@ export default function EditProfile() {
                                     <Form.Control
                                         type="text"
                                         name="location"
-                                        value={data.location}
-                                        onChange={handleChange}
+                                        value={location}
+                                        onChange={(e) => setLocation(e.target.value)}
                                         placeholder={"United States"}
-
+                                        ref={inputRef}
+                                        required
                                     />
                                 </Col>
                             </Form.Group>
