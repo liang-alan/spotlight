@@ -25,6 +25,11 @@ const AddEventModal = (props) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (locationCoords.length === 0) {
+            alert('Please select a location from the dropdown.');
+            return;
+        }
         try {
             if (image !== null) {
                 const imageRef = ref(storage, `events/${image.name}`);
@@ -46,7 +51,9 @@ const AddEventModal = (props) => {
                 locationCoords,
                 description,
                 image: imageUrl ? imageUrl : null,
-                user: props.uid
+                user: props.uid,
+                title_lowercase: title.toLowerCase(), 
+                description_lowercase: description.toLowerCase()
             };
 
             const eventCollectionRef = collection(db, 'events');
@@ -65,10 +72,6 @@ const AddEventModal = (props) => {
             setImage(e.target.files[0]);
         }
     };
-
-    useEffect(() => {
-        console.log('Location updated:', location);
-    }, [location]);
 
     return (
         <Modal show={props.show} onHide={props.handleClose} style={{ zIndex : 1050}}>

@@ -11,6 +11,7 @@ This was created using Google Firebase, React + Vite, as well as many useful lib
     - React Icons (FontAwesome)
     - React Router
     - Framer
+    - Google Maps API
 
 Thank you for looking at my project!
 

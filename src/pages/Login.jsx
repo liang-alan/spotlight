@@ -67,9 +67,9 @@ export default function Login() {
 
   const pushDefaultData = async (userId) => {
     console.log("Pushing default data for new user: ", userId);
-    await getPhotoURL();
+    const photoURL = await getPhotoURL();
     const userDocRef = doc(db, "users", userId);
-    await setDoc(userDocRef, {...defaultData, displayName: userId});
+    await setDoc(userDocRef, {...defaultData, displayName: userId , profilePicture: photoURL});
   }
 
   const searchUser = async (uid) => {

@@ -6,7 +6,7 @@ const usePlacesAutocomplete = (callback) => {
 
     useEffect(() => {
         loader.load().then(() => {
-            console.log('Google Maps API loaded');
+            // console.log('Google Maps API loaded');
             const autocomplete = new window.google.maps.places.Autocomplete(inputRef.current, {
                 types: ['geocode'],
             });

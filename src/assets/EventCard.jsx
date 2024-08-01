@@ -65,29 +65,28 @@ export default function EventCard(props) {
                 <Col xs={12} md={4}>
                     <img src={props.image || LogoSquare} alt="Event" className="event-image img-fluid" />
                 </Col>
-                <Col xs={12} md={8}>
-                    <h3 className="text-start">{props.title}</h3>
-                    <Row className="my-2">
-                        <Col xs={4} className="text-start clickable" onClick={handleGetProfile}>
-                            <Row>
-                                <Col xs={2} style={{ paddingRight: 0, paddingTop: 0, paddingBottom: 0 }}>
-                                    <img src={data.profilePicture} alt="Profile" className="profile-picture-small" />
-                                </Col>
-                                <Col xs={10}>
-                                    <p>{data.displayName}</p>
-                                </Col>
-                            </Row>
+                 <Col xs={12} md={8}>
+            <h3 className="text-start">{props.title}</h3>
+            <Row className="my-2 align-items-start">
+                <Col xs={4} className="text-start clickable" onClick={handleGetProfile}>
+                    <Row className="align-items-start">
+                        <Col xs={2} className="p-0">
+                            <img src={data.profilePicture} alt="Profile" className="profile-picture-small" />
                         </Col>
-                        <Col xs={4} className="text-start">
-                            <p><FaCalendar /> {convertTime(props.time)}, {props.date}</p>
-                        </Col>
-                        <Col xs={4} className="text-start">
-                            <p><FaMapPin /> {props.location}</p>
+                        <Col xs={10}>
+                            <p>{data.displayName}</p>
                         </Col>
                     </Row>
-
-                    <p className="text-start">{props.description}</p>
                 </Col>
+                <Col xs={4} className="text-start">
+                    <p><FaCalendar /> {convertTime(props.time)}, {props.date}</p>
+                </Col>
+                <Col xs={4} className="text-start">
+                    <p><FaMapPin /> {props.location}</p>
+                </Col>
+            </Row>
+            <p className="text-start">{props.description}</p>
+        </Col>
             </Row>
         )}
         {(!data || !isImageLoaded) && <LoadingIcon />}
