@@ -419,7 +419,7 @@ export default function EditProfile() {
 
                     <h2>Achievements</h2>
                     
-                    <AddAchievementModal show={achievementModal} handleClose={() => setAchievementModal(false)} handleSubmitAchievement={handleSubmitAchievement} />
+                    <AddAchievementModal show={achievementModal} handleClose={() => setAchievementModal(false)} userId={user.uid} handleSubmitAchievement={handleSubmitAchievement} />
                     {
                         data.achievements.map((achievement, index) => (
                             <Row key={index} className="mb-3">

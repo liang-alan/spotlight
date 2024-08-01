@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { db, storage } from '../navigation/firebase-config';
 import { collection, addDoc, doc } from 'firebase/firestore';
@@ -15,34 +15,42 @@ export default function AddAchievementModal(props){
         e.preventDefault();
 
         try {
-            // Upload image to Firebase Storage
-            if (image !== null) {
-                const imageRef = ref(storage, `media/${props.userId}/achievements/${image.name}`);
-                await uploadBytes(imageRef, image);
-                setImageUrl(await getDownloadURL(imageRef));
-            }
+
 
             // if description is longer than 650 char
             if (description.length > 650) {
                 alert('Description is too long');
                 return;
             }
+            // Upload image to Firebase Storage
+            if (image !== null) {
+                const imageRef = ref(storage, `media/${props.userId}/achievements/${image.name}`);
+                await uploadBytes(imageRef, image);
+                setImageUrl(await getDownloadURL(imageRef));
+            } else {
+                const achievementData = {
+                    title,
+                    date,
+                    description,
+                    image: imageUrl === undefined ? null : imageUrl,
+                };
+
+
+
+
+
+                props.handleSubmitAchievement(achievementData);
+                // clera fields 
+                setTitle('');
+                setDate('');
+                setDescription('');
+                setImage(null);
+                
+            }
+
             
-
-            const achievementData = {
-                title,
-                date,
-                description,
-                image: imageUrl === undefined ? null : imageUrl,
-            };
-
-            // clera fields 
-            setTitle('');
-            setDate('');
-            setDescription('');
-            setImage(null);
-
-            props.handleSubmitAchievement( achievementData );
+            
+           
             
 
         } catch (error) {
@@ -51,6 +59,26 @@ export default function AddAchievementModal(props){
             alert('Failed to add achievement.');
         }
     };
+
+    useEffect(() => {
+        if (imageUrl === null) {
+            return;
+        }
+        const achievementData = {
+            title,
+            date,
+            description,
+            image: imageUrl === undefined ? null : imageUrl,
+        };
+        // clera fields 
+        setTitle('');
+        setDate('');
+        setDescription('');
+        setImage(null);
+
+
+        props.handleSubmitAchievement(achievementData);
+    }, [imageUrl]);
 
     const handleImageChange = (e) => {
         setImage(e.target.files[0]);
