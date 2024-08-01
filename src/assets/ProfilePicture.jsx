@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Container, Form, Button, Image, ProgressBar, Alert } from "react-bootstrap";
 import './styles.css';
 
-import defaultPFP from '../img/default-pfp.jpg';
 
 
 export default function ProfilePicture(props) {
@@ -24,7 +23,7 @@ export default function ProfilePicture(props) {
     return (
     <Container>
         <Image
-            src={url ? url : defaultPFP}
+            src={url}
             alt="Profile Picture"
             className="profile-picture"
         />

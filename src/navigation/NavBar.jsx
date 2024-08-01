@@ -4,7 +4,6 @@ import { useContext, useState, useEffect } from "react";
 import Context from "./context";
 import { collection, doc, getDoc } from "firebase/firestore";
 import { db } from "./firebase-config";
-import defaultPFP from '../img/default-pfp.jpg';
 import SpotlightBanner from '../img/logo-banner.png';
 
 import '../assets/styles.css';
@@ -13,7 +12,7 @@ import '../assets/styles.css';
 export default function NavBar() {
     const { user } = useContext(Context);
 
-    const [profilePictureUrl, setProfilePictureUrl] = useState(defaultPFP);
+    const [profilePictureUrl, setProfilePictureUrl] = useState(null);
 
     useEffect(() => {
         const fetchProfilePicture = async () => {
@@ -21,16 +20,14 @@ export default function NavBar() {
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
                 const data = docSnap.data();
-                setProfilePictureUrl(data.profilePicture || defaultPFP);
-            } else {
-                setProfilePictureUrl(defaultPFP);
+                setProfilePictureUrl(data.profilePicture);
             }
         };
 
         if (user && user.uid) {
             fetchProfilePicture();
         }
-    }, [user, defaultPFP]);
+    }, [user]);
 
 
     return <Navbar bg="dark" variant="dark" fixed="top" expand="lg" className="navbar" >

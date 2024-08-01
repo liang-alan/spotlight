@@ -67,7 +67,7 @@ export default function EditProfile() {
         if (data.location) {
             setLocation(data.location);
         }
-        // console.log("My Data: ", data);
+        console.log("My Data: ", data);
     }, [data.location]);
 
     useEffect(() => {

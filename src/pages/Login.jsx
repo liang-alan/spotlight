@@ -1,6 +1,6 @@
 import { Alert, Form, Button, Container, Row, Col } from 'react-bootstrap';
 import { auth, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, storage, getDownloadURL } from '../navigation/firebase-config';
-import { useContext, useState, useRef } from 'react';
+import { useContext, useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { doc, setDoc, getDoc, collection } from "firebase/firestore";
@@ -23,6 +23,7 @@ import { FaGoogle } from "react-icons/fa";
 
 export default function Login() {
   const { user, setUser } = useContext(Context);
+  const [photoURL, setPhotoURL] = useState(null);
   const [ logIn, setLogIn ] = useState(false);
   const [credentials, setCredentials] = useState({ email: "", password: "", confirmPassword: "" });  
   const [animateBlockadeLeft, setAnimateBlockadeLeft] = useState({ opacity: 1, x: 0 });
@@ -55,8 +56,9 @@ export default function Login() {
     try {
       const storageRef = ref(storage, 'default.jpg');
       const url = await getDownloadURL(storageRef);
-      console.log('Download URL:', url);
+      // console.log('Download URL:', url);
       defaultData.profilePicture = url;
+      // console.log("Default data: ", defaultData); 
     } catch (error) {
       console.error('Error getting download URL:', error);
     }
@@ -66,10 +68,9 @@ export default function Login() {
 
 
   const pushDefaultData = async (userId) => {
-    console.log("Pushing default data for new user: ", userId);
-    const photoURL = await getPhotoURL();
+    setPhotoURL(await getPhotoURL());
     const userDocRef = doc(db, "users", userId);
-    await setDoc(userDocRef, {...defaultData, displayName: userId , profilePicture: photoURL});
+    await setDoc(userDocRef, { ...defaultData, displayName: userId });
   }
 
   const searchUser = async (uid) => {
@@ -107,7 +108,7 @@ export default function Login() {
           if (await searchUser(result.user.uid) === null) {
             
             // New user
-            pushDefaultData(result.user.uid);
+            await pushDefaultData(result.user.uid);
             navigate(`/edit-profile`);
           } else {
             // Existing user
@@ -118,7 +119,9 @@ export default function Login() {
         } catch (error) {
             console.error(error);
         }
-    }
+  }
+  
+
     const signUpWithEmail = async (e) => {
         e.preventDefault(); 
 
@@ -132,7 +135,8 @@ export default function Login() {
             console.log("User signed up: ", result.user);
             pushDefaultData(result.user.uid);
             navigate(`/edit-profile`);
-            alert("Successfully signed up!");
+          alert("Successfully signed up!");
+          await pushDefaultData(result.user.uid);
             navigate(`/edit-profile`); 
 
         } catch (error) {

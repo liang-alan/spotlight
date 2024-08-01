@@ -8,7 +8,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import LoadingIcon from '../assets/LoadingIcon';
 
 import '../assets/styles.css';
-import defaultPFP from '../img/default-pfp.jpg';
 
 import ChatUserCard from '../assets/ChatUserCard';
 import ChatMessage from '../assets/ChatMessage';

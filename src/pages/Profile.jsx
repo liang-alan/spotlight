@@ -33,6 +33,12 @@ export default function Profile() {
             setData(docSnap.data());
 
             const img = new Image();
+
+            if (!docSnap.data().profilePicture) {
+                setIsImageLoaded(true);
+                return;
+            }
+            
             img.src = docSnap.data().profilePicture;
             img.onload = () => setIsImageLoaded(true);
 
