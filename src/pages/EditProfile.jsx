@@ -143,6 +143,10 @@ export default function EditProfile() {
                 }
 
                 updatedData.tracks = updatedData.tracks.filter(track => track !== null);
+                // add lowercase field for display name and description
+                updatedData.displayName_lowercase = updatedData.displayName.toLowerCase();
+                updatedData.bio_lowercase = updatedData.bio.toLowerCase();
+                updatedData.id = user.uid;
 
                 console.log("Updated data: ", updatedData);
                 const userDocRef = doc(db, "users", user.uid);
@@ -287,7 +291,7 @@ export default function EditProfile() {
                                         name="tags"
                                         value={data.tags.join(', ')}
                                         onChange={(e) => {
-                                            const tagsArray = e.target.value.split(',').map(tag => tag.trim());
+                                            const tagsArray = e.target.value.split(',').map(tag => tag.trim().toLowerCase());
                                             setData(prevData => ({ ...prevData, tags: tagsArray }));
                                         }}
                                         placeholder={"Singer, Pianist, Solo, Songwriter"}

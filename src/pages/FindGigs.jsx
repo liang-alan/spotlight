@@ -38,7 +38,7 @@ export default function FindGigs() {
             let eventQuery;
             setSearchParam(searchParam.trim().toLowerCase());
             if (searchParam) { // TRYING TO QUERY MULTIPLE THINGS
-                alert('Searching for: ' + searchParam);
+                // alert('Searching for: ' + searchParam);
                 setIsLoading(true);
 
                 if (next && lastDoc) {
@@ -48,7 +48,7 @@ export default function FindGigs() {
                             and(where('title_lowercase', '>=', searchParam),
                                 where('title_lowercase', '<=', searchParam + '\uf8ff')),
                             and(where('description_lowercase', '>=', searchParam),
-                                where('description_lowercase', '<=', searchParam + '\uf8ff'))
+                                where('description_lowercase', '<=', searchParam + '\uf8ff')),
                         ),
                         limit(10),
                         orderBy(sortOrder),
@@ -61,8 +61,7 @@ export default function FindGigs() {
                             and(where('title_lowercase', '>=', searchParam),
                                 where('title_lowercase', '<=', searchParam + '\uf8ff')),
                             and(where('description_lowercase', '>=', searchParam),
-                                where('description_lowercase', '<=', searchParam + '\uf8ff'))
-                            
+                                where('description_lowercase', '<=', searchParam + '\uf8ff')),
                         ),
                         limit(10),
                         orderBy(sortOrder)
