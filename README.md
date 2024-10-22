@@ -16,3 +16,6 @@ This was created using Google Firebase, React + Vite, as well as many useful lib
 Thank you for looking at my project!
 
 Any further inquiries? Contact me @alanliang905@gmail.com
+
+Watch the Demo Video:
+[![Watch the video](https://img.youtube.com/vi/mdiImuhuPLE/maxresdefault.jpg)](https://youtu.be/mdiImuhuPLE)
